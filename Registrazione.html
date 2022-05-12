@@ -1,0 +1,55 @@
+<style>
+    html, body {
+        text-align: center;
+        font-size: 100%;
+        width: 100%;
+        background-color: aquamarine;} 
+    .testo:hover{
+        border-style: double;
+        height: 25px;
+        width: 250px;
+    }
+    .testo{
+        height: 20px;
+        width: 200px;
+        background-color: aliceblue;
+    }
+    .card {
+        border-style: solid;
+	    padding: 50px 0;
+        height: auto;
+        width: auto;
+	    text-align: center;
+	    -webkit-perspective: 800px;
+	    -moz-perspective: 800px;
+	    -o-perspective: 800px;
+	    -ms-perspective: 800px;
+	    perspective: 800px;
+    }
+</style>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrazione</title>
+</head>
+<body class="card">
+    <h1>Benvenuto nel form di registrazione</h1>    
+    
+    <form>
+        <label>Username:</label><br>
+        <input class="testo" type="text" name="username" id="username"><br>
+        <label>Password:</label><br>
+        <input class="testo" type="password" name="password" id="password"><br>
+        <p>Livello:</p>
+        <input type="radio" id="admin" name="livello" value="admin">
+        <label>Amministratore</label>
+        <input type="radio" id="user" name="livello" value="user">
+        <label>Utente</label><br><br><br>
+        <label>Inserire la password amministratore:</label><br>
+        <input class="testo" type="password" name="pswadmin" id="pswadmin"><br><br><br>
+        <input type="submit" value="Registra">
+    </form>
+</body>
+</html>
