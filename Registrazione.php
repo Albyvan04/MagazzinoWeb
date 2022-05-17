@@ -34,7 +34,7 @@
 <body class="sfondo">
     <h1 style="color: aliceblue;">Benvenuto nel form di registrazione</h1>    
     
-    <div class="card mb-3" style="max-width: 600px; margin-top: 100px; margin-left: 375px;">
+    <div class="card mb-3" style="max-width: 700px;margin-top: 10%; margin-left: 30%; margin-right:30%; margin-bottom:10%">
         <div class="row g-0">
           <div class="col-md-4">
             <img src="account.jpg" class="img-fluid rounded-start" style="height: 250px; width: 200px;">
