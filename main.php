@@ -1,6 +1,6 @@
 <?php 
-    setcookie("username", "");
-    setcookie("priviledge", "");
+    setcookie("username", null, time()+3600);
+    setcookie("priviledge", null, time()+3600);
     $visibility = "hidden";
 
     if($_COOKIE["username"] != "" && $_COOKIE["priviledge"] != "")
