@@ -53,8 +53,68 @@
                 <label>Inserire la password amministratore:</label><br>
                 <input class="testo" type="password" name="pswadmin" id="pswadmin"><br><br><br>
                 <input type="submit" style="background-color:cadetblue;" class="btn btn-primary btn-lg" value="Registra">
-            </form>
-          </div>
+
+                    <?php
+
+                    const ultraPass = "1234";
+
+                    if(!isset($_POST["username"]) || !isset($_POST["password"]))
+                    {
+                        echo("Inserisci username e password!");
+                    }
+
+                    if(!isset($_POST["pswadmin"]))
+                    {
+                        echo("Inserire la password Amministratore!");
+                    }
+                
+                    if(isset($_POST["registrati"]))
+                    {
+            
+                        $pswadmin = $_POST["pswadmin"];
+                        if($pswadmin != ultraPass)
+                        {
+                            echo("Password Admin errata!");
+                        }
+                        else
+                        {
+                        $username = $_POST["username"];
+                        $password = $_POST["password"];
+                        $priviledge = 1;
+                    
+                        if($_POST["livello"] == "admin")
+                        {
+                            $priviledge = 0;
+                        }
+                    
+                        include 'ORM.inc.php';
+                        $orm = new ORM("login_5f");
+                        try
+                        {
+                            $orm->OpenConn();
+                            if(count($orm->SearchUser($username, $password)) != 0)
+                            {
+                                echo("Utente già esistente!");
+                            }
+                            else
+                            {
+                                $orm->CreateUser($username, $password, $priviledge);
+                                $orm->CloseConn();
+                                $_COOKIE["username"] = $username;
+                                $_COOKIE["priviledge"] = $priviledge;
+                                header("location: main.php");
+                            }
+                        }
+                        catch(Exception $ex)
+                        {
+                            echo($ex);
+                        }
+                        $orm->CloseConn();
+                    }
+                }
+                ?>
+                </form>
+            </div>
         </div>
     </div>
 </body>
