@@ -1,12 +1,9 @@
-<?php
-    $elementi = [];
-?>
-
 <style>
     html, body {
         text-align: center;
         font-size: 100%;
         width: 100%;
+        align-items: center;
 } 
     .testo:hover{
         border-style: double;
@@ -40,6 +37,7 @@
     <nav class="navbar" style="background-color: transparent;">
     <div class="container-fluid">
         <a class="navbar-brand"><img src="logo.jpg" style="height: 40px; width:80px;"></a>
+        <button type="button" class="btn btn-outline-success" name="aggiungi" style="margin-left: -60%;">Aggiungi</button>
         <form class="d-flex" role="search">
         <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search" style="width: 400px;">
         <button class="btn btn-outline-success" type="submit">Cerca</button>
@@ -60,6 +58,8 @@
                             <li class='list-group-item'>Quantità: ".$elementi[$i]->getQuantity()."</li>
                             <li class='list-group-item'>Prezzo: ".$elementi[$i]->getPrice()."€</li>
                         </ul>
+                        <button type="button" class="btn btn-success" name="modifica" style="margin-left: 10%;">Modifica</button>
+                        <button type="button" class="btn btn-danger" name="elimina" style="width:50px; margin-left:10%;">X</button>
                     </div>
                 </div>
                 </td>");
