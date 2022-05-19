@@ -34,26 +34,25 @@
 <body class="sfondo">
     <h1 style="color: aliceblue;">Benvenuto nel form di registrazione</h1>    
     
-    <div class="card mb-3" style="max-width: 700px;margin-top: 10%; margin-left: 30%; margin-right:30%; margin-bottom:10%">
+    <div class="card mb-3" style="max-width: 600px; margin-top: 100px; margin-left: 375px;">
         <div class="row g-0">
-          <div class="col-md-4">
+            <div class="col-md-4">
             <img src="account.jpg" class="img-fluid rounded-start" style="height: 250px; width: 200px;">
-          </div>
-          <div class="col-md-8">
-            <form>
-                <label>Username:</label><br>
-                <input class="testo" type="text" name="username" id="username"><br>
-                <label>Password:</label><br>
-                <input class="testo" type="password" name="password" id="password"><br>
-                <p>Livello:</p>
-                <input type="radio" id="admin" name="livello" value="admin">
-                <label>Amministratore</label>
-                <input type="radio" id="user" name="livello" value="user" checked="True">
-                <label>Utente</label><br><br><br>
-                <label>Inserire la password amministratore:</label><br>
-                <input class="testo" type="password" name="pswadmin" id="pswadmin"><br><br><br>
-                <input type="submit" style="background-color:cadetblue;" class="btn btn-primary btn-lg" value="Registra">
-
+            </div>
+            <div class="col-md-8">
+                <form action="Registrazione.php" method="POST">
+                    <label>Username:</label><br>
+                    <input class="testo" type="text" name="username" id="username"><br>
+                    <label>Password:</label><br>
+                    <input class="testo" type="password" name="password" id="password"><br>
+                    <p>Livello:</p>
+                    <input type="radio" id="admin" name="livello" value="admin">
+                    <label>Amministratore</label>
+                    <input type="radio" id="user" name="livello" value="user" checked="true">
+                    <label>Utente</label><br><br><br>
+                    <label>Inserire la password amministratore:</label><br>
+                    <input class="testo" type="password" name="pswadmin" id="pswadmin"><br><br><br>
+                    <input type="submit" style="background-color:cadetblue;" class="btn btn-primary btn-lg" value="Registra">
                     <?php
 
                     const ultraPass = "1234";
@@ -88,7 +87,7 @@
                         }
                     
                         include 'ORM.inc.php';
-                        $orm = new ORM("login_5f");
+                        $orm = new ORM("magazzino");
                         try
                         {
                             $orm->OpenConn();
