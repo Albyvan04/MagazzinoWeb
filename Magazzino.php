@@ -44,16 +44,31 @@
         </form>
     </div>
     </nav>
-    <table class="table table-sm" style="border:transparent;">
-        <?php 
-            $numero = count($elementi)/3;
-            for($i = 0; $i < $numero; $i++)
+    <table class="table table-sm">
+        <?php
+            include("ORM.inc.php");
+            $orm = new ORM("magazzino");
+            try
             {
-                echo ("<TR>);
+                $orm->OpenConn();
+                $elementi = $orm->SelectProducts();
+                $orm->CloseConn();
+            }
+            catch(Exception $ex)
+            {
+                echo($ex);
+            }
+
+            $numero = ($elementi->num_rows)/2;
+            for($i = 0; $i < $numero; $i+=2)
+            {
+                echo ("<TR>");
+                for($j = 0; $j < 2; $j++)
+                {
                 echo("<td>
                 <div class='card' style='width: 18rem; margin-left:7%;display: inline-block;'>
                     <div class='card-body'>
-                        <h5 class='card-title'>".$elementi[$i]->getDescription()."</h5>
+                        <h5 class='card-title'>".$elementi[$i+$j]->getDescription()."</h5>
                         <ul class='list-group list-group-flush'>
                             <li class='list-group-item'>Quantità: ".$elementi[$i]->getQuantity()."</li>
                             <li class='list-group-item'>Prezzo: ".$elementi[$i]->getPrice()."€</li>
