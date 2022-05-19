@@ -23,4 +23,3 @@ class Account
     public function setPassword($password) { $this->password = $password; }
     public function setPriviledge($priviledge) { $this->priviledge = $priviledge; }
 }
-?>
