@@ -6,59 +6,68 @@ class ORM
 
     public function __construct($name)
     {
-        $nameDb = $name;
+        $this->nameDb = $name;
     }
 
     public function OpenConn()
     {
-        if(!isset($this->conn))
+        if(!$this->conn)
         {
             $this->conn = new mysqli('localhost', 'root', null, $this->nameDb);
+            #$this->conn->select_db($this->nameDb);
         }
+        #print_r($this->conn);
     }
 
     public function CloseConn()
     {
-        if(isset($this->conn))
+        if($this->conn)
         {
             $this->conn->close();
         }
     }
 
-    public function CreateUser($username, $password, $priviledge)
+    public function CreateUser($username, $password, $privilegi)
     {
-        $query = "INSERT INTO Accounts (username, password, priviledge) VALUES ('$username', '$password', '$priviledge')";
+        $query = "INSERT INTO utenti (username, password, privilegi) VALUES ('$username', '$password', '$privilegi')";
         $this->conn->query($query);
     }
 
     public function SearchUser($username, $password)
     {
-        $query = "SELECT * FROM Accounts WHERE username = '$username' AND password = '$password'";
+        $query = "SELECT * FROM utenti WHERE username = '$username' AND password = '$password'";
         $result = $this->conn->query($query);
         return $result;
     }
 
-    public function CreateProduct($description, $quantity, $price)
+    public function CreateProduct($descrizione, $quantita, $prezzo)
     {
-        $query = "INSERT INTO Products (description, quantity, price) VALUES ('$description', '$quantity', '$price')";
+        $query = "INSERT INTO articoli (descrizione, quantita, prezzo) VALUES ('$descrizione', '$quantita', '$prezzo')";
         $this->conn->query($query);
     }
 
     public function UpdateProduct($updated_product)
     {
-        $query = "UPDATE Products SET description = '$updated_product->description', quantity = '$updated_product->quantity', price = '$updated_product->price' WHERE id = '$updated_product->id'";
+        $query = "UPDATE articoli SET descrizione = '$updated_product->descrizione', quantita = '$updated_product->quantita', prezzo = '$updated_product->prezzo' WHERE id = '$updated_product->id'";
         $this->conn->query($query);
     }
 
     public function DeleteProduct($product)
     {
-        $query = "DELETE FROM Products WHERE id = '$product->id'";
+        $query = "DELETE FROM articoli WHERE id = '$product->id'";
         $this->conn->query($query);
     }
 
-    public function SearchProduct($description, $min_price = 0.00, $max_price = 999999.99)
+    public function SearchProduct($descrizione, $min_price = 0.00, $max_price = 999999.99)
     {
-        $query = "SELECT * FROM Products WHERE description LIKE '%$description%' AND price BETWEEN $min_price AND $max_price";
+        $query = "SELECT * FROM articoli WHERE descrizione LIKE '%$descrizione%' AND prezzo BETWEEN $min_price AND $max_price";
+        $result =  $this->conn->query($query);
+        return $result;
+    }
+
+    public function SelectProducts()
+    {
+        $query = "SELECT * FROM articoli";
         $result =  $this->conn->query($query);
         return $result;
     }
