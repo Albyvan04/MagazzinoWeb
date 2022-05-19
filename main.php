@@ -1,22 +1,24 @@
 <?php 
-    setcookie("username", null, time()+3600);
-    setcookie("priviledge", null, time()+3600);
+    #setcookie("username", null);
+    #setcookie("priviledge", null);
     $visibility = "hidden";
-
-    if($_COOKIE["username"] != "" && $_COOKIE["priviledge"] != "")
+    #print_r($_COOKIE);
+    if($_COOKIE["username"] != null && $_COOKIE["priviledge"] != null)
     {
+        echo("Sono qui");
         $username = $_COOKIE["username"];
         $intro = "Benvenuto $username";
-        if($priviledge == 0) 
+        if($_COOKIE["priviledge"] == 1) 
         {
             $visibility = "visible";
+            echo("Visibile");
         }
     }
 ?>
 
 <style>
     h2 {
-        visibility: <?php $visibility ?>;
+        visibility: "<?php $visibility?>";
     }
 </style>
 
@@ -26,7 +28,7 @@
 </head>
 <body>
     <h1>IL MIO MAGAZZINO</h1>
-    <h2 value=<?php $intro?>></h2>
+    <h2">$intro</h2>
     <a href="Registrazione.php">Registrati</a>
     <a href="Login.php">Login</a>
 </body>

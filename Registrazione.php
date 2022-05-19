@@ -52,24 +52,26 @@
                     <label>Utente</label><br><br><br>
                     <label>Inserire la password amministratore:</label><br>
                     <input class="testo" type="password" name="pswadmin" id="pswadmin"><br><br><br>
-                    <input type="submit" style="background-color:cadetblue;" class="btn btn-primary btn-lg" value="Registra">
+                    <input type="submit" name="registrati" style="background-color:cadetblue;" class="btn btn-primary btn-lg" value="Registra">
                     <?php
 
                     const ultraPass = "1234";
 
-                    if(!isset($_POST["username"]) || !isset($_POST["password"]))
-                    {
-                        echo("Inserisci username e password!");
-                    }
-
-                    if(!isset($_POST["pswadmin"]))
-                    {
-                        echo("Inserire la password Amministratore!");
-                    }
-                
                     if(isset($_POST["registrati"]))
                     {
-            
+                        #print_r($_POST);
+                        if($_POST["username"] == null || $_POST["password"] == null)
+                        {
+                            echo("Inserisci username e password!");
+                            exit;
+                        }
+
+                        if($_POST["pswadmin"] == null)
+                        {
+                            echo("Inserire la password Amministratore!");
+                            exit;
+                        }
+
                         $pswadmin = $_POST["pswadmin"];
                         if($pswadmin != ultraPass)
                         {
@@ -91,7 +93,7 @@
                         try
                         {
                             $orm->OpenConn();
-                            if(count($orm->SearchUser($username, $password)) != 0)
+                            if($orm->CountResult() != 0)
                             {
                                 echo("Utente già esistente!");
                             }
@@ -99,8 +101,8 @@
                             {
                                 $orm->CreateUser($username, $password, $priviledge);
                                 $orm->CloseConn();
-                                $_COOKIE["username"] = $username;
-                                $_COOKIE["priviledge"] = $priviledge;
+                                setcookie("username", $username);
+                                setcookie("priviledge", $priviledge);
                                 header("location: main.php");
                             }
                         }
@@ -109,6 +111,7 @@
                             echo($ex);
                         }
                         $orm->CloseConn();
+                        unset($_POST);
                     }
                 }
                 ?>

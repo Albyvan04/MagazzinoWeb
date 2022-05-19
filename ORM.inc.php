@@ -71,5 +71,10 @@ class ORM
         $result =  $this->conn->query($query);
         return $result;
     }
+
+    public function CountResult()
+    {
+        return mysqli_field_count($this->conn);
+    }
 }
 ?>
