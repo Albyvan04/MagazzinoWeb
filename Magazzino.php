@@ -34,13 +34,13 @@
 </head>
 
 <body class="sfondo">
-    <nav class="navbar" style="background-color: transparent;">
+    <nav class="navbar sticky-top bg-ligh" style="background-color: darkgray;">
     <div class="container-fluid">
         <a class="navbar-brand"><img src="logo.jpg" style="height: 40px; width:80px;"></a>
-        <button type="button" class="btn btn-outline-success" name="aggiungi" style="margin-left: -60%;">Aggiungi</button>
+        <button type="button" class="btn btn-outline-success" name="aggiungi" style="margin-left: -40%;">Aggiungi</button>
         <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search" style="width: 400px;">
-        <button class="btn btn-outline-success" type="submit">Cerca</button>
+        <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search" style="width: 400px;" name="txtCerca">
+        <button class="btn btn-outline-primary" type="submit" name="cerca">Cerca</button>
         </form>
     </div>
     </nav>
@@ -66,7 +66,7 @@
                 for($j = 0; $j < 2; $j++)
                 {
                 echo("<td>
-                <div class='card' style='width: 18rem;'>
+                <div class='card' style='width: 18rem; margin-left:7%;display: inline-block;'>
                     <div class='card-body'>
                         <h5 class='card-title'>".$elementi[$i+$j]->getDescription()."</h5>
                         <ul class='list-group list-group-flush'>
@@ -77,10 +77,8 @@
                         <button type="button" class="btn btn-danger" name="elimina" style="width:50px; margin-left:10%;">X</button>
                     </div>
                 </div>
-                </td>");
-                }
-                echo ("</TR>");      
-            }
+                echo("</td>");
+                echo ("</TR>");
         ?>
     </table>
 </body>
