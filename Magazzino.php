@@ -86,8 +86,8 @@
         if (count($prodotti) == 0) {
             echo ("Non ci sono prodotti in magazzino");
         } else {
-            $numero = count($prodotti) / 3;
-            for ($i = 0; $i < $numero; $i += 3) {
+            #$numero = count($prodotti) / 3;
+            for ($i = 0; $i < count($prodotti); $i += 3) {
                 echo ("<TR>");
                 for ($j = 0; $j < 3 && $j < count($prodotti) - $i; $j++) {
                     $index = $i + $j;
