@@ -48,7 +48,7 @@
                 <?php
 
                 if (isset($_POST["aggiungi"])) {
-                    header("location: Inserimento.php");
+                    header("location: Articolo.php");
                 }
                 ?>
             </form>
@@ -99,12 +99,26 @@
                                 <li class='list-group-item'>Quantità: " . $prodotti[$index]->getQuantity() . "</li>
                                 <li class='list-group-item'>Prezzo: " . $prodotti[$index]->getPrice() . "€</li>
                             </ul>
+                            <form action='Magazzino.php' method='POST'>
                             <button type='button' class='btn btn-success' name='modifica$index' style='margin-left: 10%;'>Modifica</button>
                             <button type='button' class='btn btn-danger' name='elimina$index' style='width:50px; margin-left:10%;'>X</button>
+                            </form>
                         </div>
                     </div></td>");
                 }
                 echo ("</TR>");
+            }
+        }
+
+        //intercettazione pulsanti modifica
+        for($i = 0; $i < count($prodotti); $i++)
+        {
+            if(isset($_POST["modifica$i"]))
+            {
+                setcookie("descrizione", $prodotti[$i]->getDescription());
+                setcookie("quantita", $prodotti[$i]->getQuantity());
+                setcookie("prezzo", $prodotti[$i]->getPrice());
+                header("location: Articolo.php");
             }
         }
         ?>
