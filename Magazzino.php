@@ -86,7 +86,7 @@ switch ($_COOKIE["priviledge"]) {
         font-size: xx-large;
     }
 
-    img{
+    img {
         height: 40px;
         width: 80px;
     }
