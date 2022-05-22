@@ -11,8 +11,7 @@ class ORM
 
     public function OpenConn()
     {
-        if(!$this->conn)
-        {
+        if (!$this->conn) {
             $this->conn = new mysqli('localhost', 'root', null, $this->nameDb);
             #$this->conn->select_db($this->nameDb);
         }
@@ -21,8 +20,7 @@ class ORM
 
     public function CloseConn()
     {
-        if($this->conn)
-        {
+        if ($this->conn) {
             $this->conn->close();
         }
     }
@@ -37,7 +35,15 @@ class ORM
     {
         $query = "SELECT * FROM utenti WHERE username = '$username' AND password = '$password'";
         $result = $this->conn->query($query);
-        return $result;
+        return $result->fetch_all();
+    }
+
+    public function CountUser($username)
+    {
+        $query = "SELECT COUNT(*) FROM utenti WHERE username = '$username'";
+        $result = $this->conn->query($query);
+        #print_r("Risultato $result");
+        return $result->fetch_row()[0];
     }
 
     public function CreateProduct($descrizione, $quantita, $prezzo)
@@ -69,7 +75,7 @@ class ORM
     {
         $query = "SELECT * FROM articoli";
         $result =  $this->conn->query($query);
-        return $result;
+        return $result->fetch_all();
     }
 
     public function CountResult()
@@ -77,4 +83,3 @@ class ORM
         return mysqli_field_count($this->conn);
     }
 }
-?>
