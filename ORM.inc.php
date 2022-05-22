@@ -13,9 +13,7 @@ class ORM
     {
         if (!$this->conn) {
             $this->conn = new mysqli('localhost', 'root', null, $this->nameDb);
-            #$this->conn->select_db($this->nameDb);
         }
-        #print_r($this->conn);
     }
 
     public function CloseConn()
@@ -33,7 +31,7 @@ class ORM
 
     public function SearchUser($username, $password)
     {
-        $query = "SELECT * FROM utenti WHERE username = '$username' AND password = '$password'";
+        $query = "SELECT * FROM utenti WHERE username = '$username' AND BINARY password = '$password'";
         $result = $this->conn->query($query);
         return $result->fetch_all();
     }
@@ -42,19 +40,18 @@ class ORM
     {
         $query = "SELECT COUNT(*) FROM utenti WHERE username = '$username'";
         $result = $this->conn->query($query);
-        #print_r("Risultato $result");
         return $result->fetch_row()[0];
     }
 
-    public function CreateProduct($descrizione, $quantita, $prezzo)
+    public function CreateProduct($product)
     {
-        $query = "INSERT INTO articoli (descrizione, quantita, prezzo) VALUES ('$descrizione', '$quantita', '$prezzo')";
+        $query = "INSERT INTO articoli (descrizione, quantita, prezzo) VALUES ('" . $product->getDescription() . "', '" . $product->getQuantity() . "', '" . $product->getPrice() . "')";
         $this->conn->query($query);
     }
 
     public function UpdateProduct($updated_product)
     {
-        $query = "UPDATE articoli SET descrizione = '$updated_product->descrizione', quantita = '$updated_product->quantita', prezzo = '$updated_product->prezzo' WHERE id = '$updated_product->id'";
+        $query = "UPDATE articoli SET descrizione = '" . $updated_product->getDescription() . "', quantita = '" . $updated_product->getQuantity() . "', prezzo = '" . $updated_product->getPrice() . "' WHERE id = '" . $updated_product->getId() . "'";
         $this->conn->query($query);
     }
 
@@ -64,11 +61,18 @@ class ORM
         $this->conn->query($query);
     }
 
-    public function SearchProduct($descrizione, $min_price = 0.00, $max_price = 999999.99)
+    public function SearchProductByDescription($descrizione)
     {
-        $query = "SELECT * FROM articoli WHERE descrizione LIKE '%$descrizione%' AND prezzo BETWEEN $min_price AND $max_price";
+        $query = "SELECT * FROM articoli WHERE descrizione LIKE '%$descrizione%'";
         $result =  $this->conn->query($query);
-        return $result;
+        return $result->fetch_all();
+    }
+
+    public function SearchProductByPrice($price)
+    {
+        $query = "SELECT * FROM articoli WHERE prezzo BETWEEN '$price' AND '9999.99'";
+        $result =  $this->conn->query($query);
+        return $result->fetch_all();
     }
 
     public function SelectProducts()

@@ -1,27 +1,24 @@
 <?php
-#setcookie("username", null);
-#setcookie("priviledge", null);
-$visibility = "hidden";
-#print_r($_COOKIE);
-if ($_COOKIE["username"] != null && $_COOKIE["priviledge"] != null) {
-    $username = $_COOKIE["username"];
+session_start();
+if (!isset($_SESSION["username"])) {
+    header("location: Login.php");
+}
+if ($_SESSION["username"] != null && $_COOKIE["priviledge"] != null) {
+    $username = $_SESSION["username"];
     $intro = "Benvenuto $username";
-    if ($_COOKIE["priviledge"] == 0) {
-        $visibility = "visible";
-    }
+}
+
+if (isset($_POST["logout"])) {
+    session_destroy();
+    header("location: Login.php");
 }
 ?>
 
 <style>
-    label {
-        visibility: <?php echo ($visibility); ?>;
-    }
-
-    html,body {
+    html,
+    body {
         text-align: center;
         font-size: 100%;
-        width: 100%;
-        align-items: center;
     }
 
     .sfondo {
@@ -31,13 +28,18 @@ if ($_COOKIE["username"] != null && $_COOKIE["priviledge"] != null) {
         -moz-background-size: cover;
         -webkit-background-size: cover;
         background-size: cover;
-        color:antiquewhite;
-        font-size:xx-large;
+        color: antiquewhite;
+        font-size: xx-large;
     }
 
-    a{
-        color:antiquewhite;
-        font-size:xx-large;
+    a,
+    input {
+        color: antiquewhite;
+        font-size: xx-large;
+        text-decoration: underline;
+        background-color: transparent;
+        border: none;
+        font-family: serif;
     }
 </style>
 
@@ -50,7 +52,9 @@ if ($_COOKIE["username"] != null && $_COOKIE["priviledge"] != null) {
 <body class="sfondo">
     <h1>IL MIO MAGAZZINO</h1>
     <label><?php echo ($intro); ?></label><br><br><br>
-    <a href="Registrazione.php">Registrati</a><br>
-    <a href="Login.php">Login</a><br>
-    <a href="Magazzino.php">Magazzino</a>
+    <form method="POST" action="main.php">
+        <a href="Registrazione.php">Nuova registrazione</a><br>
+        <input type="submit" name="logout" value="Logout"><br>
+        <a href="Magazzino.php">Magazzino</a>
+    </form>
 </body>
