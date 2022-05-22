@@ -36,8 +36,12 @@ switch ($_COOKIE["modalita"]) {
         -webkit-background-size: cover;
         background-size: cover;
     }
-</style>
 
+    img {
+        height: 250px;
+        width: 200px;
+    }
+</style>
 <html lang="en">
 
 <head>
@@ -50,24 +54,24 @@ switch ($_COOKIE["modalita"]) {
 <body class="sfondo">
     <h1 style="color: aliceblue;"><?php echo ($nomeForm); ?></h1>
 
-    <div class="card mb-3" style="max-width: 1000px;margin-top: 6%; margin-left: 30%; margin-right:30%; margin-bottom:10%">
+    <div class="card mb-3" style="max-width: 800; margin:auto; margin-top: 5%;">
         <div class="row g-0" style="align-items: center;">
             <div class="col-md-4">
-                <img src="account.jpg" class="img-fluid rounded-start" style="height: 250px; width: 200px;">
+                <img src="account.jpg" class="img-fluid rounded-start">
             </div>
             <div class="col-md-8">
                 <form method="POST" action="Articolo.php">
-                    <br><br><label style="margin-left: 20%">Descrizione:</label><br>
-                    <input type="text" style="max-width: 250px; margin-left: 20%; margin-right:10%;" class="form-control" placeholder="Descrizione" aria-describedby="addon-wrapping" name="descrizione" maxlength="20" value="<?php echo ($descrizione); ?>"><br>
-                    <label style="margin-left: 20%">Prezzo:</label><br>
-                    <div class="input-group mb-3" style="margin-left: 20%; margin-right:10%;">
-                        <span class="input-group-text" style=" max-width: 50px;">€</span>
-                        <input type="text" style="max-width: 220px;" name="prezzo" class="form-control" value="<?php echo ($prezzo); ?>" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" min="0.0" max="9999.00" maxlength="6" value="0.00">
+                    <br><br><label>Descrizione:</label><br>
+                    <input type="text" class="form-control" placeholder="Descrizione" aria-describedby="addon-wrapping" name="descrizione" maxlength="20" style="width:250px; margin:auto;" value=<?php echo ($descrizione); ?>><br>
+                    <label>Prezzo:</label><br>
+                    <div class="input-group mb-3" style="margin: auto;">
+                        <span class="input-group-text" style="margin-left: auto;">€</span>
+                        <input type="text" name="prezzo" class="form-control" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" min="0.0" max="9999.00" maxlength="6" value="<?php echo ($prezzo); ?>" style="max-width:220; margin-top:auto; margin-right:auto; margin-bottom:auto">
                     </div><br>
                     <div>
                         <label style="margin-left: -40%;">Quantità:</label><br>
                         <input type="number" name="quantita" value="<?php echo ($quantita); ?>" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 0" min="0" value="1"><br><br>
-                        <input type="submit" style="background-color:cadetblue; margin-left: 10%;" class="btn btn-primary btn-lg" value="<?php echo ($nomeBtn); ?>" name="<?php echo ($nomeBtn); ?>"><br>
+                        <input type="submit" style="background-color:cadetblue" class="btn btn-primary btn-lg" value="<?php echo ($nomeBtn); ?>" name="<?php echo ($nomeBtn); ?>"><br>
 
                         <?php
                         if (isset($_POST["Inserisci"]) || isset($_POST["Modifica"])) {
@@ -94,7 +98,7 @@ switch ($_COOKIE["modalita"]) {
                                         try {
                                             $orm->OpenConn();
                                             if ($modalita == "INSERISCI") {
-                                                $elementi = $orm->CreateProduct($prodotto->getDescription(), $prodotto->getQuantity(), $prodotto->getPrice());
+                                                $elementi = $orm->CreateProduct($prodotto);
                                             } else if ($modalita == "MODIFICA") {
                                                 $orm->UpdateProduct($prodotto);
                                                 echo ("<script>alert('Modifica avvenuta con successo!')</script>");

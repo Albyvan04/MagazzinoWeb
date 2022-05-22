@@ -27,7 +27,7 @@
         background-size: cover;
     }
 
-    img{
+    img {
         height: 250px;
         width: 200px;
     }
@@ -79,9 +79,14 @@
                                 echo ("Username e/o password errati!");
                             } else {
                                 $user = new Account($result[0][0], $result[0][1], $result[0][2], $result[0][3]);
-                                setcookie("id", $user->getId());
-                                setcookie("username", $user->getUsername());
-                                setcookie("password", $user->getPassword());
+                                session_start();
+                                $_SESSION["id"] = $user->getId();
+                                $_SESSION["username"] = $username;
+                                $_SESSION["password"] = $password;
+                                //$_SESSION["priviledge"] = $user->getPriviledge();
+                                //setcookie("id", $user->getId());
+                                //setcookie("username", $user->getUsername());
+                                //setcookie("password", $user->getPassword());
                                 setcookie("priviledge", $user->getPriviledge());
                                 header("location: main.php");
                             }

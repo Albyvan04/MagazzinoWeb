@@ -27,7 +27,7 @@
         background-size: cover;
     }
 
-    img{
+    img {
         height: 250px;
         width: 200px;
     }
@@ -107,10 +107,15 @@
                                     $result = $orm->SearchUser($username, $password)[0];
                                     $orm->CloseConn();
                                     $user = new Account($result[0], $result[1], $result[2], $result[3]);
-                                    setcookie("id", $user->getId());
-                                    setcookie("username", $user->getUsername());
-                                    setcookie("password", $user->getPassword());
-                                    setcookie("priviledge", $user->getPriviledge());
+                                    session_start();
+                                    $_SESSION["id"] = $user->getId();
+                                    $_SESSION["username"] = $username;
+                                    $_SESSION["password"] = $password;
+                                    $_SESSION["priviledge"] = $user->getPriviledge();
+                                    //setcookie("id", $user->getId());
+                                    //setcookie("username", $user->getUsername());
+                                    //setcookie("password", $user->getPassword());
+                                    //setcookie("priviledge", $user->getPriviledge());
                                     header("location: main.php");
                                 }
                             } catch (Exception $ex) {

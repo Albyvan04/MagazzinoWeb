@@ -1,3 +1,52 @@
+<?php
+
+function ViewProdotti($elementi)
+{
+    $prodotti = [];
+    for ($i = 0; $i < count($elementi); $i++) {
+        array_push($prodotti, new Product($elementi[$i][0], $elementi[$i][1], $elementi[$i][2], $elementi[$i][3]));
+    }
+
+    //visualizzazione prodotti
+    if (count($prodotti) == 0) {
+        echo ("<label>Non ci sono prodotti in magazzino</label>");
+    } else {
+        #$numero = count($prodotti) / 3;
+        for ($i = 0; $i < count($prodotti); $i += 3) {
+            echo ("<TR>");
+            for ($j = 0; $j < 3 && $j < count($prodotti) - $i; $j++) {
+                $index = $i + $j;
+                echo ("<td>
+                <div class='card' style='width: 18rem; margin-left:10%; display: inline-block; margin-top:5%;'>
+                    <div class='card-body'>
+                        <h5 class='card-title'>" . $prodotti[$index]->getDescription() . "</h5>
+                        <ul class='list-group list-group-flush'>
+                            <li class='list-group-item'>Quantità: " . $prodotti[$index]->getQuantity() . "</li>
+                            <li class='list-group-item'>Prezzo: " . $prodotti[$index]->getPrice() . "€</li>
+                        </ul><br>
+                        <form action='Magazzino.php' method='POST'>
+                        <button type='submit' class='btn btn-success' name='modifica$index' style='margin-left: 15%;' id='privilegi'>Modifica</button>
+                        <button type='submit' class='btn btn-danger' name='elimina$index' style='width:50px; margin-left:10%;' id='privilegi'>X</button>
+                        </form>
+                    </div>
+                </div></td>");
+            }
+            echo ("</TR>");
+        }
+    }
+}
+
+switch ($_COOKIE["priviledge"]) {
+    case 0:
+        $visibility = "visible";
+        break;
+    case 1:
+        $visibility = "hidden";
+        break;
+}
+?>
+
+
 <style>
     html,
     body {
@@ -28,14 +77,18 @@
         background-size: cover;
     }
 
-    label{
-        color:antiquewhite;
-        font-size:xx-large;
+    #privilegi {
+        visibility: <?php echo ($visibility); ?>;
     }
 
-    a{
+    label {
+        color: antiquewhite;
+        font-size: xx-large;
+    }
+
+    a {
         height: 40px;
-        width:80px;
+        width: 80px;
     }
 </style>
 
@@ -53,9 +106,10 @@
         <div class="container-fluid">
             <form method="POST" action="Magazzino.php">
                 <a href="main.php" class="navbar-brand"><img src="logo.jpg"></a>
-                <button type="submit" class="btn btn-outline-success" name="aggiungi">Aggiungi</button>
+                <button type="submit" class="btn btn-outline-success" name="aggiungi" id="privilegi">Aggiungi</button>
                 <?php
                 if (isset($_POST["aggiungi"])) {
+                    setcookie("modalita", "INSERISCI");
                     header("location: Articolo.php");
                 }
                 ?>
@@ -63,15 +117,43 @@
             <label>MAGAZZINO</label>
             <form class="d-flex" role="search" method="POST" action="Magazzino.php">
                 <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search" style="width: 400px;" name="txtCerca">
-                <button type="button" class="btn btn-primary">Ricerca</button>
+                <button type="submit" class="btn btn-primary">Ricerca</button>
 
                 <?php
                 if (isset($_POST["cerca"])) {
-                    ######
+                    $searched = $_POST["txtCerca"];
+
+                    include "ORM.inc.php";
+                    include "Product.inc.php";
+                    $orm = new ORM("magazzino");
+
+                    if (str_contains($searched, "€")) {
+
+                        $tmp = trim($searched, "€");
+                        $last = str_replace(",", ".", $tmp);
+                        try {
+                            $orm->OpenConn();
+                            $elementi = $orm->SearchProductByPrice($last);
+                            $orm->CloseConn();
+                        } catch (Exception $ex) {
+                            echo ($ex);
+                        }
+                    } else {
+                        try {
+                            $orm->OpenConn();
+                            $elementi = $orm->SearchProductByDescription($searched);
+                            $orm->CloseConn();
+                        } catch (Exception $ex) {
+                            echo ($ex);
+                        }
+                    }
+
+                    ViewProdotti($elementi);
                 }
                 ?>
             </form>
         </div>
+
     </nav>
     <table class="table table-sm" style="border:transparent; margin:auto; margin-top:2%">
         <?php
@@ -86,49 +168,33 @@
             echo ($ex);
         }
 
+        $numElementi = count($elementi);
+
         $prodotti = [];
         for ($i = 0; $i < count($elementi); $i++) {
             array_push($prodotti, new Product($elementi[$i][0], $elementi[$i][1], $elementi[$i][2], $elementi[$i][3]));
         }
 
-        if (count($prodotti) == 0) {
-            echo ("<label>Non ci sono prodotti in magazzino</label>");
-        } else {
-            #$numero = count($prodotti) / 3;
-            for ($i = 0; $i < count($prodotti); $i += 3) { 
-                echo ("<TR>");
-                for ($j = 0; $j < 3 && $j < count($prodotti) - $i; $j++) {
-                    $index = $i + $j;
-                    echo ("<td>
-                    <div class='card' style='width: 18rem; margin-left:10%; display: inline-block; margin-top:5%;'>
-                        <div class='card-body'>
-                            <h5 class='card-title'>" . $prodotti[$index]->getDescription() . "</h5>
-                            <ul class='list-group list-group-flush'>
-                                <li class='list-group-item'>Quantità: " . $prodotti[$index]->getQuantity() . "</li>
-                                <li class='list-group-item'>Prezzo: " . $prodotti[$index]->getPrice() . "€</li>
-                            </ul><br>
-                            <form action='Magazzino.php' method='POST'>
-                            <button type='button' class='btn btn-success' name='modifica$index' style='margin-left: 15%;'>Modifica</button>
-                            <button type='button' class='btn btn-danger' name='elimina$index' style='width:50px; margin-left:10%;'>X</button>
-                            </form>
-                        </div>
-                    </div></td>");
-                }
-                echo ("</TR>");
-            }
-        }
-
-        //intercettazione pulsanti modifica
-        for($i = 0; $i < count($prodotti); $i++)
-        {
-            if(isset($_POST["modifica$i"]))
-            {
+        //intercettazione modifica articolo
+        for ($i = 0; $i < $numElementi; $i++) {
+            if (isset($_POST["modifica$i"])) {
+                setcookie("id", $prodotti[$i]->getId());
                 setcookie("descrizione", $prodotti[$i]->getDescription());
                 setcookie("quantita", $prodotti[$i]->getQuantity());
                 setcookie("prezzo", $prodotti[$i]->getPrice());
+                setcookie("modalita", "MODIFICA");
                 header("location: Articolo.php");
             }
         }
+
+        //intercettazione elimina articolo
+        for ($i = 0; $i < $numElementi; $i++) {
+            if (isset($_POST["elimina$i"])) {
+                $viewModale = "block";
+            }
+        }
+
+        ViewProdotti($elementi);
         ?>
     </table>
 </body>
