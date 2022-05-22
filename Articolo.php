@@ -1,4 +1,9 @@
 <?php
+session_start();
+if (!isset($_SESSION["username"])) {
+    header("location: Login.php");
+}
+
 switch ($_COOKIE["modalita"]) {
     case "INSERISCI":
         $titolo = "Inserimento prodotto";
@@ -98,13 +103,19 @@ switch ($_COOKIE["modalita"]) {
                                         try {
                                             $orm->OpenConn();
                                             if ($modalita == "INSERISCI") {
-                                                $elementi = $orm->CreateProduct($prodotto);
+                                                if ($orm->ExistsProduct($descrizione) == 0) {
+                                                    $elementi = $orm->CreateProduct($prodotto);
+                                                    $orm->CloseConn();
+                                                    header("location: Magazzino.php");
+                                                } else {
+                                                    echo ("Prodotto con questa descrizione giá esistente!");
+                                                    $orm->CloseConn();
+                                                }
                                             } else if ($modalita == "MODIFICA") {
                                                 $orm->UpdateProduct($prodotto);
-                                                echo ("<script>alert('Modifica avvenuta con successo!')</script>");
+                                                $orm->CloseConn();
+                                                header("location: Magazzino.php");
                                             }
-                                            $orm->CloseConn();
-                                            header("location: Magazzino.php");
                                         } catch (Exception $ex) {
                                             echo ($ex);
                                         }

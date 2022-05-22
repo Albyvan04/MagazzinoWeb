@@ -57,22 +57,22 @@ class ORM
 
     public function DeleteProduct($product)
     {
-        $query = "DELETE FROM articoli WHERE id = '$product->id'";
+        $query = "DELETE FROM articoli WHERE id = '" . $product->getId() . "'";
         $this->conn->query($query);
     }
 
-    public function SearchProductByDescription($descrizione)
+    public function SearchProduct($descrizione, $minimo, $massimo)
     {
-        $query = "SELECT * FROM articoli WHERE descrizione LIKE '%$descrizione%'";
+        $query = "SELECT * FROM articoli WHERE descrizione LIKE '%$descrizione%' AND prezzo BETWEEN $minimo AND $massimo";
         $result =  $this->conn->query($query);
         return $result->fetch_all();
     }
 
-    public function SearchProductByPrice($price)
+    public function ExistsProduct($descrizione)
     {
-        $query = "SELECT * FROM articoli WHERE prezzo BETWEEN '$price' AND '9999.99'";
+        $query = "SELECT COUNT(*) FROM articoli WHERE BINARY descrizione = '$descrizione'";
         $result =  $this->conn->query($query);
-        return $result->fetch_all();
+        return $result->fetch_row()[0];
     }
 
     public function SelectProducts()

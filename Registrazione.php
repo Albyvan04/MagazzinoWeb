@@ -111,11 +111,11 @@
                                     $_SESSION["id"] = $user->getId();
                                     $_SESSION["username"] = $username;
                                     $_SESSION["password"] = $password;
-                                    $_SESSION["priviledge"] = $user->getPriviledge();
+                                    //$_SESSION["priviledge"] = $priviledge;
                                     //setcookie("id", $user->getId());
                                     //setcookie("username", $user->getUsername());
                                     //setcookie("password", $user->getPassword());
-                                    //setcookie("priviledge", $user->getPriviledge());
+                                    setcookie("priviledge", $user->getPriviledge());
                                     header("location: main.php");
                                 }
                             } catch (Exception $ex) {

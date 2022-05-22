@@ -1,4 +1,6 @@
 <?php
+include "ORM.inc.php";
+include "Product.inc.php";
 
 function ViewProdotti($elementi)
 {
@@ -11,7 +13,6 @@ function ViewProdotti($elementi)
     if (count($prodotti) == 0) {
         echo ("<label>Non ci sono prodotti in magazzino</label>");
     } else {
-        #$numero = count($prodotti) / 3;
         for ($i = 0; $i < count($prodotti); $i += 3) {
             echo ("<TR>");
             for ($j = 0; $j < 3 && $j < count($prodotti) - $i; $j++) {
@@ -114,52 +115,21 @@ switch ($_COOKIE["priviledge"]) {
                 }
                 ?>
             </form>
-            <label>MAGAZZINO</label>
+            <a href="Magazzino.php"><label>MAGAZZINO</label></a>
             <form class="d-flex" role="search" method="POST" action="Magazzino.php">
                 <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search" style="width: 400px;" name="txtCerca">
-                <button type="submit" class="btn btn-primary">Ricerca</button>
-
-                <?php
-                if (isset($_POST["cerca"])) {
-                    $searched = $_POST["txtCerca"];
-
-                    include "ORM.inc.php";
-                    include "Product.inc.php";
-                    $orm = new ORM("magazzino");
-
-                    if (str_contains($searched, "€")) {
-
-                        $tmp = trim($searched, "€");
-                        $last = str_replace(",", ".", $tmp);
-                        try {
-                            $orm->OpenConn();
-                            $elementi = $orm->SearchProductByPrice($last);
-                            $orm->CloseConn();
-                        } catch (Exception $ex) {
-                            echo ($ex);
-                        }
-                    } else {
-                        try {
-                            $orm->OpenConn();
-                            $elementi = $orm->SearchProductByDescription($searched);
-                            $orm->CloseConn();
-                        } catch (Exception $ex) {
-                            echo ($ex);
-                        }
-                    }
-
-                    ViewProdotti($elementi);
-                }
-                ?>
+                <button type="submit" name="cerca" class="btn btn-primary">Ricerca</button>
+                <input class="form-control me-2" type="search" placeholder="Prezzo min. (€)" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" min="0.0" max="9999.00" maxlength="6" aria-label="Search" style="width: 150px;" name="txtPrezzoMin">
+                <input class="form-control me-2" type="search" placeholder="Prezzo max. (€)" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" min="0.0" max="9999.00" maxlength="6" aria-label="Search" style="width: 150px;" name="txtPrezzoMax">
             </form>
         </div>
 
     </nav>
     <table class="table table-sm" style="border:transparent; margin:auto; margin-top:2%">
         <?php
-        include "ORM.inc.php";
-        include "Product.inc.php";
+
         $orm = new ORM("magazzino");
+
         try {
             $orm->OpenConn();
             $elementi = $orm->SelectProducts();
@@ -190,11 +160,43 @@ switch ($_COOKIE["priviledge"]) {
         //intercettazione elimina articolo
         for ($i = 0; $i < $numElementi; $i++) {
             if (isset($_POST["elimina$i"])) {
-                $viewModale = "block";
+                $orm = new ORM("magazzino");
+                try {
+                    $orm->OpenConn();
+                    $orm->DeleteProduct($prodotti[$i]);
+                    $orm->CloseConn();
+                    header("location: Magazzino.php");
+                } catch (Exception $ex) {
+                    echo ($ex);
+                }
             }
         }
 
-        ViewProdotti($elementi);
+        if (!isset($_POST["cerca"]))
+            ViewProdotti($elementi);
+
+        if (isset($_POST["cerca"])) {
+            $minPrice = 0.00;
+            $maxPrice = 9999.99;
+            $searched = $_POST["txtCerca"];
+
+            if ($_POST["txtPrezzoMin"] != null)
+                $minPrice = $_POST["txtPrezzoMin"];
+
+            if ($_POST["txtPrezzoMax"] != null)
+                $maxPrice = $_POST["txtPrezzoMax"];
+
+            $orm = new ORM("magazzino");
+            try {
+                $orm->OpenConn();
+                $elementi = $orm->SearchProduct($searched, $minPrice, $maxPrice);
+                $orm->CloseConn();
+            } catch (Exception $ex) {
+                echo ($ex);
+            }
+
+            ViewProdotti($elementi);
+        }
         ?>
     </table>
 </body>

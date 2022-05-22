@@ -11,7 +11,7 @@ try {
             echo ("Errore nella creazione della tabella Utenti: " . $connection->error . "<BR>");
         }
 
-        if ($connection->query('CREATE TABLE Articoli(id int auto_increment PRIMARY KEY, descrizione varchar(20) NOT NULL, quantita int, prezzo double(6,2))') == TRUE) {
+        if ($connection->query('CREATE TABLE Articoli(id int auto_increment PRIMARY KEY, descrizione varchar(20) NOT NULL, quantita int, prezzo double(6,2), UNIQUE(descrizione))') == TRUE) {
             echo ("Tabella Articoli creata correttamente<BR>");
         } else {
             echo ("Errore nella creazione della tabella Articoli: " . $connection->error . "<BR>");
