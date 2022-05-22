@@ -69,7 +69,7 @@ switch ($_COOKIE["modalita"]) {
                         <input type="text" name="prezzo" class="form-control" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" min="0.0" max="9999.00" maxlength="6" value="<?php echo ($prezzo); ?>" style="max-width:220; margin-top:auto; margin-right:auto; margin-bottom:auto">
                     </div><br>
                     <div>
-                        <label style="margin-left: -40%;">Quantità:</label><br>
+                        <label style="margin: auto;">Quantità:</label><br>
                         <input type="number" name="quantita" value="<?php echo ($quantita); ?>" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 0" min="0" value="1"><br><br>
                         <input type="submit" style="background-color:cadetblue" class="btn btn-primary btn-lg" value="<?php echo ($nomeBtn); ?>" name="<?php echo ($nomeBtn); ?>"><br>
 

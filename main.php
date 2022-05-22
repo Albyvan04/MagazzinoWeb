@@ -19,8 +19,6 @@ if (isset($_POST["logout"])) {
     body {
         text-align: center;
         font-size: 100%;
-        width: 100%;
-        align-items: center;
     }
 
     .sfondo {
