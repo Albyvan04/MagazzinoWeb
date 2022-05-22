@@ -28,14 +28,14 @@
         background-size: cover;
     }
 
-    label{
-        color:antiquewhite;
-        font-size:xx-large;
+    label {
+        color: antiquewhite;
+        font-size: xx-large;
     }
 
-    a{
+    a {
         height: 40px;
-        width:80px;
+        width: 80px;
     }
 </style>
 
@@ -56,6 +56,7 @@
                 <button type="submit" class="btn btn-outline-success" name="aggiungi">Aggiungi</button>
                 <?php
                 if (isset($_POST["aggiungi"])) {
+                    setcookie("modalita", "INSERISCI");
                     header("location: Articolo.php");
                 }
                 ?>
@@ -63,7 +64,7 @@
             <label>MAGAZZINO</label>
             <form class="d-flex" role="search" method="POST" action="Magazzino.php">
                 <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search" style="width: 400px;" name="txtCerca">
-                <button type="button" class="btn btn-primary">Ricerca</button>
+                <button type="submit" class="btn btn-primary">Ricerca</button>
 
                 <?php
                 if (isset($_POST["cerca"])) {
@@ -72,6 +73,7 @@
                 ?>
             </form>
         </div>
+
     </nav>
     <table class="table table-sm" style="border:transparent; margin:auto; margin-top:2%">
         <?php
@@ -91,11 +93,31 @@
             array_push($prodotti, new Product($elementi[$i][0], $elementi[$i][1], $elementi[$i][2], $elementi[$i][3]));
         }
 
+        //intercettazione modifica articolo
+        for ($i = 0; $i < count($prodotti); $i++) {
+            if (isset($_POST["modifica$i"])) {
+                setcookie("id", $prodotti[$i]->getId());
+                setcookie("descrizione", $prodotti[$i]->getDescription());
+                setcookie("quantita", $prodotti[$i]->getQuantity());
+                setcookie("prezzo", $prodotti[$i]->getPrice());
+                setcookie("modalita", "MODIFICA");
+                header("location: Articolo.php");
+            }
+        }
+
+        //intercettazione elimina articolo
+        for ($i = 0; $i < count($prodotti); $i++) {
+            if (isset($_POST["elimina$i"])) {
+                $viewModale = "block";
+            }
+        }
+
+        //visualizzazione prodotti
         if (count($prodotti) == 0) {
             echo ("<label>Non ci sono prodotti in magazzino</label>");
         } else {
             #$numero = count($prodotti) / 3;
-            for ($i = 0; $i < count($prodotti); $i += 3) { 
+            for ($i = 0; $i < count($prodotti); $i += 3) {
                 echo ("<TR>");
                 for ($j = 0; $j < 3 && $j < count($prodotti) - $i; $j++) {
                     $index = $i + $j;
@@ -108,25 +130,13 @@
                                 <li class='list-group-item'>Prezzo: " . $prodotti[$index]->getPrice() . "€</li>
                             </ul><br>
                             <form action='Magazzino.php' method='POST'>
-                            <button type='button' class='btn btn-success' name='modifica$index' style='margin-left: 15%;'>Modifica</button>
-                            <button type='button' class='btn btn-danger' name='elimina$index' style='width:50px; margin-left:10%;'>X</button>
+                            <button type='submit' class='btn btn-success' name='modifica$index' style='margin-left: 15%;'>Modifica</button>
+                            <button type='submit' class='btn btn-danger' name='elimina$index' style='width:50px; margin-left:10%;'>X</button>
                             </form>
                         </div>
                     </div></td>");
                 }
                 echo ("</TR>");
-            }
-        }
-
-        //intercettazione pulsanti modifica
-        for($i = 0; $i < count($prodotti); $i++)
-        {
-            if(isset($_POST["modifica$i"]))
-            {
-                setcookie("descrizione", $prodotti[$i]->getDescription());
-                setcookie("quantita", $prodotti[$i]->getQuantity());
-                setcookie("prezzo", $prodotti[$i]->getPrice());
-                header("location: Articolo.php");
             }
         }
         ?>

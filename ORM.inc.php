@@ -13,9 +13,7 @@ class ORM
     {
         if (!$this->conn) {
             $this->conn = new mysqli('localhost', 'root', null, $this->nameDb);
-            #$this->conn->select_db($this->nameDb);
         }
-        #print_r($this->conn);
     }
 
     public function CloseConn()
@@ -42,19 +40,18 @@ class ORM
     {
         $query = "SELECT COUNT(*) FROM utenti WHERE username = '$username'";
         $result = $this->conn->query($query);
-        #print_r("Risultato $result");
         return $result->fetch_row()[0];
     }
 
-    public function CreateProduct($descrizione, $quantita, $prezzo)
+    public function CreateProduct($product)
     {
-        $query = "INSERT INTO articoli (descrizione, quantita, prezzo) VALUES ('$descrizione', '$quantita', '$prezzo')";
+        $query = "INSERT INTO articoli (descrizione, quantita, prezzo) VALUES ('" . $product->getDescription() . "', '" . $product->getQuantity() . "', '" . $product->getPrice() . "')";
         $this->conn->query($query);
     }
 
     public function UpdateProduct($updated_product)
     {
-        $query = "UPDATE articoli SET descrizione = '$updated_product->descrizione', quantita = '$updated_product->quantita', prezzo = '$updated_product->prezzo' WHERE id = '$updated_product->id'";
+        $query = "UPDATE articoli SET descrizione = '" . $updated_product->getDescription() . "', quantita = '" . $updated_product->getQuantity() . "', prezzo = '" . $updated_product->getPrice() . "' WHERE id = '" . $updated_product->getId() . "'";
         $this->conn->query($query);
     }
 
