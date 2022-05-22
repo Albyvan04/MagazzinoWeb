@@ -13,7 +13,9 @@ class ORM
     {
         if (!$this->conn) {
             $this->conn = new mysqli('localhost', 'root', null, $this->nameDb);
+            #$this->conn->select_db($this->nameDb);
         }
+        #print_r($this->conn);
     }
 
     public function CloseConn()
@@ -40,6 +42,7 @@ class ORM
     {
         $query = "SELECT COUNT(*) FROM utenti WHERE username = '$username'";
         $result = $this->conn->query($query);
+        #print_r("Risultato $result");
         return $result->fetch_row()[0];
     }
 
@@ -51,8 +54,7 @@ class ORM
 
     public function UpdateProduct($updated_product)
     {
-        $query = "UPDATE articoli SET descrizione = '" . $updated_product->getDescription() . "', quantita = '" . $updated_product->getQuantity() . "', prezzo = '" . $updated_product->getPrice() . "' WHERE id = '" . $updated_product->getId() . "'";
-        echo ($query);
+        $query = "UPDATE articoli SET descrizione = '$updated_product->descrizione', quantita = '$updated_product->quantita', prezzo = '$updated_product->prezzo' WHERE id = '$updated_product->id'";
         $this->conn->query($query);
     }
 

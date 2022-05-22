@@ -26,6 +26,11 @@
         -webkit-background-size: cover;
         background-size: cover;
     }
+
+    img{
+        height: 250px;
+        width: 200px;
+    }
 </style>
 
 <html lang="en">
@@ -40,21 +45,20 @@
 <body class="sfondo">
     <h1 style="color: aliceblue;">Benvenuto nel form di login</h1>
 
-    <div class="card mb-3" style="max-width: 600px; margin-top: 10%; margin-left: 30%; margin-right:30%; margin-bottom:10%">
+    <div class="card mb-3" style="max-width: 600px; margin:auto; margin-top:10%;">
         <div class="row g-0">
             <div class="col-md-4">
-                <img src="account.jpg" class="img-fluid rounded-start" style="height: 250px; width: 200px;">
+                <img src="account.jpg" class="img-fluid rounded-start">
             </div>
             <div class="col-md-8">
                 <form method="POST" action="Login.php">
                     <br><label>Username:</label><br>
-                    <input class="testo" type="text" name="username" id="username"><br>
+                    <input class="testo" type="text" name="username" id="username"><br><br>
                     <label>Password:</label><br>
                     <input class="testo" type="password" name="password" id="password"><br><br><br><br>
                     <input type="submit" style="background-color:cadetblue;" class="btn btn-primary btn-lg" name="loggati" value="Accedi"><br>
-
+                    <br><a href="Registrazione.php">Non hai ancora creato il tuo account? Clicca qui</a><br>
                     <?php
-
                     if (isset($_POST["loggati"])) {
 
                         if ($_POST["username"] == null || $_POST["password"] == null) {
@@ -87,12 +91,10 @@
                         $orm->CloseConn();
                     }
                     ?>
-
                 </form>
             </div>
         </div>
     </div>
-    <a href="Registrazione.php">Non hai ancora creato il tuo account? Clicca qui</a>
 </body>
 
 </html>

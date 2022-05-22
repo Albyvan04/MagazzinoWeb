@@ -26,6 +26,11 @@
         -webkit-background-size: cover;
         background-size: cover;
     }
+
+    img{
+        height: 250px;
+        width: 200px;
+    }
 </style>
 
 <html lang="en">
@@ -40,14 +45,14 @@
 <body class="sfondo">
     <h1 style="color: aliceblue;">Benvenuto nel form di registrazione</h1>
 
-    <div class="card mb-3" style="max-width: 600px; margin-top: 100px; margin-left: 375px;">
+    <div class="card mb-3" style="max-width: 800px; margin:auto; margin-top:5%">
         <div class="row g-0">
             <div class="col-md-4">
-                <img src="account.jpg" class="img-fluid rounded-start" style="height: 250px; width: 200px;">
+                <img src="account.jpg" class="img-fluid rounded-start">
             </div>
             <div class="col-md-8">
                 <form action="Registrazione.php" method="POST">
-                    <label>Username:</label><br>
+                    <br><label>Username:</label><br>
                     <input class="testo" type="text" name="username" id="username"><br>
                     <label>Password:</label><br>
                     <input class="testo" type="password" name="password" id="password"><br><br>
@@ -56,7 +61,7 @@
                         <label>Amministratore</label>
                         <input type="radio" id="user" name="livello" value="user" checked="true">
                         <label>Utente</label>
-                    </p><br><br>
+                    </p><br>
                     <label>Inserire la password amministratore:</label><br>
                     <input class="testo" type="password" name="pswadmin" id="pswadmin"><br><br><br>
                     <input type="submit" name="registrati" style="background-color:cadetblue;" class="btn btn-primary btn-lg" value="Registra"><br>

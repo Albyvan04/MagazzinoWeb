@@ -1,7 +1,3 @@
-<?php
-$viewModale = "none";
-?>
-
 <style>
     html,
     body {
@@ -32,26 +28,14 @@ $viewModale = "none";
         background-size: cover;
     }
 
-    .modal {
-        display: <?php echo ($viewModale); ?>;
-        position: fixed;
-        z-index: 1;
-        padding-top: 100px;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgb(0, 0, 0);
-        background-color: rgba(0, 0, 0, 0.4);
+    label{
+        color:antiquewhite;
+        font-size:xx-large;
     }
 
-    .modal-content {
-        background-color: #fefefe;
-        margin: auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 80%;
+    a{
+        height: 40px;
+        width:80px;
     }
 </style>
 
@@ -67,22 +51,19 @@ $viewModale = "none";
 <body class="sfondo">
     <nav class="navbar sticky-top bg-ligh" style="background-color: darkgray;">
         <div class="container-fluid">
-            <a class="navbar-brand"><img src="logo.jpg" style="height: 40px; width:80px;"></a>
             <form method="POST" action="Magazzino.php">
-                <button type="submit" class="btn btn-outline-success" name="aggiungi" style="margin-left: -40%;">Aggiungi</button>
-
+                <a href="main.php" class="navbar-brand"><img src="logo.jpg"></a>
+                <button type="submit" class="btn btn-outline-success" name="aggiungi">Aggiungi</button>
                 <?php
-
                 if (isset($_POST["aggiungi"])) {
-                    setcookie("modalita", "INSERISCI");
                     header("location: Articolo.php");
                 }
                 ?>
             </form>
-
+            <label>MAGAZZINO</label>
             <form class="d-flex" role="search" method="POST" action="Magazzino.php">
                 <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search" style="width: 400px;" name="txtCerca">
-                <button class="btn btn-outline-primary" type="submit" name="cerca">Cerca</button>
+                <button type="button" class="btn btn-primary">Ricerca</button>
 
                 <?php
                 if (isset($_POST["cerca"])) {
@@ -91,19 +72,9 @@ $viewModale = "none";
                 ?>
             </form>
         </div>
-
-        <div id="modale" class="modal">
-            <div class="modal-content">
-                <span onclick="chiudi">&times;</span>
-                <p>Selezione</p>
-            </div>
-
-        </div>
-
     </nav>
-    <table class="table table-sm">
+    <table class="table table-sm" style="border:transparent; margin:auto; margin-top:2%">
         <?php
-
         include "ORM.inc.php";
         include "Product.inc.php";
         $orm = new ORM("magazzino");
@@ -120,43 +91,25 @@ $viewModale = "none";
             array_push($prodotti, new Product($elementi[$i][0], $elementi[$i][1], $elementi[$i][2], $elementi[$i][3]));
         }
 
-        //intercettazione modifica articolo
-        for ($i = 0; $i < count($prodotti); $i++) {
-            if (isset($_POST["modifica$i"])) {
-                setcookie("descrizione", $prodotti[$i]->getDescription());
-                setcookie("quantita", $prodotti[$i]->getQuantity());
-                setcookie("prezzo", $prodotti[$i]->getPrice());
-                setcookie("modalita", "MODIFICA");
-                header("location: Articolo.php");
-            }
-        }
-
-        //intercettazione elimina articolo
-        for ($i = 0; $i < count($prodotti); $i++) {
-            if (isset($_POST["elimina$i"])) {
-                $viewModale = "block";
-            }
-        }
-
-        //visualizzazione prodotti
         if (count($prodotti) == 0) {
-            echo ("Non ci sono prodotti in magazzino");
+            echo ("<label>Non ci sono prodotti in magazzino</label>");
         } else {
-            for ($i = 0; $i < count($prodotti); $i += 3) {
+            #$numero = count($prodotti) / 3;
+            for ($i = 0; $i < count($prodotti); $i += 3) { 
                 echo ("<TR>");
                 for ($j = 0; $j < 3 && $j < count($prodotti) - $i; $j++) {
                     $index = $i + $j;
                     echo ("<td>
-                    <div class='card' style='width: 18rem; margin-left:7%; display: inline-block;'>
+                    <div class='card' style='width: 18rem; margin-left:10%; display: inline-block; margin-top:5%;'>
                         <div class='card-body'>
                             <h5 class='card-title'>" . $prodotti[$index]->getDescription() . "</h5>
                             <ul class='list-group list-group-flush'>
                                 <li class='list-group-item'>Quantità: " . $prodotti[$index]->getQuantity() . "</li>
                                 <li class='list-group-item'>Prezzo: " . $prodotti[$index]->getPrice() . "€</li>
-                            </ul>
+                            </ul><br>
                             <form action='Magazzino.php' method='POST'>
-                            <button type='submit' class='btn btn-success' name='modifica$index' style='margin-left: 10%;'>Modifica</button>
-                            <button type='submit' class='btn btn-danger' name='elimina$index' style='width:50px; margin-left:10%;'>X</button>
+                            <button type='button' class='btn btn-success' name='modifica$index' style='margin-left: 15%;'>Modifica</button>
+                            <button type='button' class='btn btn-danger' name='elimina$index' style='width:50px; margin-left:10%;'>X</button>
                             </form>
                         </div>
                     </div></td>");
@@ -165,8 +118,18 @@ $viewModale = "none";
             }
         }
 
+        //intercettazione pulsanti modifica
+        for($i = 0; $i < count($prodotti); $i++)
+        {
+            if(isset($_POST["modifica$i"]))
+            {
+                setcookie("descrizione", $prodotti[$i]->getDescription());
+                setcookie("quantita", $prodotti[$i]->getQuantity());
+                setcookie("prezzo", $prodotti[$i]->getPrice());
+                header("location: Articolo.php");
+            }
+        }
         ?>
-
     </table>
 </body>
 
