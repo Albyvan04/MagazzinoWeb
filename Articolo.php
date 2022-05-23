@@ -62,7 +62,7 @@ switch ($_COOKIE["modalita"]) {
     <div class="card mb-3" style="max-width: 800; margin:auto; margin-top: 5%;">
         <div class="row g-0" style="align-items: center;">
             <div class="col-md-4">
-                <img src="account.jpg" class="img-fluid rounded-start">
+                <img src="prodotto.jpg" class="img-fluid rounded-start">
             </div>
             <div class="col-md-8">
                 <form method="POST" action="Articolo.php">
