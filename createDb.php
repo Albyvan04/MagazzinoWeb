@@ -5,7 +5,7 @@ try {
         echo ("Database Magazzino creato correttamente<BR>");
         $connection = new mysqli("localhost", "root", null, "Magazzino");
 
-        if ($connection->query('CREATE TABLE Utenti(id int auto_increment PRIMARY KEY, username varchar(20) NOT NULL UNIQUE, password varchar(20) NOT NULL, privilegi int(1) NOT NULL)') == TRUE) {
+        if ($connection->query('CREATE TABLE Utenti(id int auto_increment PRIMARY KEY, username varchar(20) NOT NULL, password varchar(20) NOT NULL, privilegi int(1) NOT NULL, UNIQUE(username))') == TRUE) {
             echo ("Tabella Utenti creata correttamente<BR>");
         } else {
             echo ("Errore nella creazione della tabella Utenti: " . $connection->error . "<BR>");
