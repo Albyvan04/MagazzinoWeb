@@ -2,20 +2,29 @@
 include "ORM.inc.php";
 include "Product.inc.php";
 
-function ViewProdotti($elementi)
-{
-    $prodotti = [];
-    for ($i = 0; $i < count($elementi); $i++) {
-        array_push($prodotti, new Product($elementi[$i][0], $elementi[$i][1], $elementi[$i][2], $elementi[$i][3]));
-    }
+session_start();
+if (!isset($_SESSION["username"])) {
+    header("location: Login.php");
+}
 
+switch ($_COOKIE["priviledge"]) {
+    case 0:
+        $visibility = "visible";
+        break;
+    case 1:
+        $visibility = "hidden";
+        break;
+}
+
+function ViewProdotti($prodotti, $numElementi)
+{
     //visualizzazione prodotti
-    if (count($prodotti) == 0) {
-        echo ("<label>Non ci sono prodotti in magazzino</label>");
+    if ($numElementi == 0) {
+        echo ("<label>Non ci sono prodotti in magazzino con questi filtri</label>");
     } else {
-        for ($i = 0; $i < count($prodotti); $i += 3) {
+        for ($i = 0; $i < $numElementi; $i += 3) {
             echo ("<TR>");
-            for ($j = 0; $j < 3 && $j < count($prodotti) - $i; $j++) {
+            for ($j = 0; $j < 3 && $j < $numElementi - $i; $j++) {
                 $index = $i + $j;
                 echo ("<td>
                 <div class='card' style='width: 18rem; margin-left:10%; display: inline-block; margin-top:5%;'>
@@ -36,17 +45,7 @@ function ViewProdotti($elementi)
         }
     }
 }
-
-switch ($_COOKIE["priviledge"]) {
-    case 0:
-        $visibility = "visible";
-        break;
-    case 1:
-        $visibility = "hidden";
-        break;
-}
 ?>
-
 
 <style>
     html,
@@ -91,6 +90,13 @@ switch ($_COOKIE["priviledge"]) {
         height: 40px;
         width: 80px;
     }
+
+    #Magazzino {
+        background-color: transparent;
+        border: none;
+        color: antiquewhite;
+        font-size: xx-large;
+    }
 </style>
 
 <html lang="en">
@@ -115,16 +121,26 @@ switch ($_COOKIE["priviledge"]) {
                 }
                 ?>
             </form>
-            <a href="Magazzino.php"><label>MAGAZZINO</label></a>
+            <form method="POST" action="Magazzino.php">
+                <button type="submit" id="Magazzino" name="magazzino">MAGAZZINO</button>
+                <?php
+                if (isset($_POST["magazzino"])) {
+                    setcookie("searched", "", time() - 3600);
+                    setcookie("minPrice", "", time() - 3600);
+                    setcookie("maxPrice", "", time() - 3600);
+                    header("location: Magazzino.php");
+                }
+                ?>
+            </form>
             <form class="d-flex" role="search" method="POST" action="Magazzino.php">
                 <div>
                     <div class="input-group">
-                    <input class="form-control me-2" style="margin-right: 0px !important;" type="search" placeholder="Cerca" aria-label="Search" style="width: 400px;" name="txtCerca">
-                    <button type="submit" name="cerca" class="btn btn-primary">Ricerca</button>
+                        <input class="form-control me-2" style="margin-right: 0px !important;" type="search" placeholder="Cerca" aria-label="Search" style="width: 400px;" name="txtCerca">
+                        <button type="submit" name="cerca" class="btn btn-primary">Ricerca</button>
                     </div><br>
                     <div class="input-group">
-                    <input class="form-control me-2" style="margin-right: 0px !important;" type="search" placeholder="Prezzo min. (€)" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" min="0.0" max="9999.00" maxlength="6" aria-label="Search" style="width: 150px;" name="txtPrezzoMin">
-                    <input class="form-control me-2" style="margin-right: 0px !important;" type="search" placeholder="Prezzo max. (€)" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" min="0.0" max="9999.00" maxlength="6" aria-label="Search" style="width: 150px;" name="txtPrezzoMax">
+                        <input class="form-control me-2" style="margin-right: 0px !important;" type="search" placeholder="Prezzo min. (€)" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" min="0.0" max="999999" maxlength="6" aria-label="Search" style="width: 150px;" name="txtPrezzoMin">
+                        <input class="form-control me-2" style="margin-right: 0px !important;" type="search" placeholder="Prezzo max. (€)" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" min="0.0" max="999999" maxlength="6" aria-label="Search" style="width: 150px;" name="txtPrezzoMax">
                     </div>
                 </div>
             </form>
@@ -134,11 +150,42 @@ switch ($_COOKIE["priviledge"]) {
     <table class="table table-sm" style="border:transparent; margin:auto; margin-top:2%">
         <?php
 
-        $orm = new ORM("magazzino");
+        $minPrice = 0.00;
+        $maxPrice = 999999;
+        $searched = "";
 
+        if (isset($_COOKIE["searched"]) && $_COOKIE["searched"] != null) {
+            $searched = $_COOKIE["searched"];
+        }
+        if ((isset($_POST["txtCerca"]) && $_POST["txtCerca"] != null)) {
+            $searched = $_POST["txtCerca"];
+            setcookie("searched", $searched);
+        }
+
+        if (isset($_COOKIE["minPrice"]) && $_COOKIE["minPrice"] != null) {
+            $minPrice = $_COOKIE["minPrice"];
+        }
+        if (isset($_POST["txtPrezzoMin"]) && $_POST["txtPrezzoMin"] != null) {
+            $minPrice = $_POST["txtPrezzoMin"];
+            setcookie("minPrice", $minPrice);
+        }
+
+        if (isset($_COOKIE["maxPrice"]) && $_COOKIE["maxPrice"] != null) {
+            $maxPrice = $_COOKIE["maxPrice"];
+        }
+        if (isset($_POST["txtPrezzoMax"]) && $_POST["txtPrezzoMax"] != null) {
+            $maxPrice = $_POST["txtPrezzoMax"];
+            setcookie("maxPrice", $maxPrice);
+        }
+
+        /*setcookie("minPrice", $minPrice);
+        setcookie("maxPrice", $maxPrice);
+        setcookie("searched", $searched);*/
+
+        $orm = new ORM("magazzino");
         try {
             $orm->OpenConn();
-            $elementi = $orm->SelectProducts();
+            $elementi = $orm->SearchProduct($searched, $minPrice, $maxPrice);
             $orm->CloseConn();
         } catch (Exception $ex) {
             echo ($ex);
@@ -147,7 +194,7 @@ switch ($_COOKIE["priviledge"]) {
         $numElementi = count($elementi);
 
         $prodotti = [];
-        for ($i = 0; $i < count($elementi); $i++) {
+        for ($i = 0; $i < $numElementi; $i++) {
             array_push($prodotti, new Product($elementi[$i][0], $elementi[$i][1], $elementi[$i][2], $elementi[$i][3]));
         }
 
@@ -178,33 +225,16 @@ switch ($_COOKIE["priviledge"]) {
             }
         }
 
-        if (!isset($_POST["cerca"]))
-            ViewProdotti($elementi);
+        ViewProdotti($prodotti, $numElementi);
 
-        if (isset($_POST["cerca"])) {
-            $minPrice = 0.00;
-            $maxPrice = 9999.99;
-            $searched = $_POST["txtCerca"];
+        //print_r($_POST);
 
-            if ($_POST["txtPrezzoMin"] != null)
-                $minPrice = $_POST["txtPrezzoMin"];
-
-            if ($_POST["txtPrezzoMax"] != null)
-                $maxPrice = $_POST["txtPrezzoMax"];
-
-            $orm = new ORM("magazzino");
-            try {
-                $orm->OpenConn();
-                $elementi = $orm->SearchProduct($searched, $minPrice, $maxPrice);
-                $orm->CloseConn();
-            } catch (Exception $ex) {
-                echo ($ex);
-            }
-
-            ViewProdotti($elementi);
-        }
         ?>
     </table>
 </body>
 
 </html>
+
+<?php
+ob_end_flush();
+?>
