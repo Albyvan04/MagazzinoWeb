@@ -117,10 +117,16 @@ switch ($_COOKIE["priviledge"]) {
             </form>
             <a href="Magazzino.php"><label>MAGAZZINO</label></a>
             <form class="d-flex" role="search" method="POST" action="Magazzino.php">
-                <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search" style="width: 400px;" name="txtCerca">
-                <button type="submit" name="cerca" class="btn btn-primary">Ricerca</button>
-                <input class="form-control me-2" type="search" placeholder="Prezzo min. (€)" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" min="0.0" max="9999.00" maxlength="6" aria-label="Search" style="width: 150px;" name="txtPrezzoMin">
-                <input class="form-control me-2" type="search" placeholder="Prezzo max. (€)" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" min="0.0" max="9999.00" maxlength="6" aria-label="Search" style="width: 150px;" name="txtPrezzoMax">
+                <div>
+                    <div class="input-group">
+                    <input class="form-control me-2" style="margin-right: 0px !important;" type="search" placeholder="Cerca" aria-label="Search" style="width: 400px;" name="txtCerca">
+                    <button type="submit" name="cerca" class="btn btn-primary">Ricerca</button>
+                    </div><br>
+                    <div class="input-group">
+                    <input class="form-control me-2" style="margin-right: 0px !important;" type="search" placeholder="Prezzo min. (€)" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" min="0.0" max="9999.00" maxlength="6" aria-label="Search" style="width: 150px;" name="txtPrezzoMin">
+                    <input class="form-control me-2" style="margin-right: 0px !important;" type="search" placeholder="Prezzo max. (€)" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" min="0.0" max="9999.00" maxlength="6" aria-label="Search" style="width: 150px;" name="txtPrezzoMax">
+                    </div>
+                </div>
             </form>
         </div>
 
