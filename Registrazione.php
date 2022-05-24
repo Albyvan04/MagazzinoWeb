@@ -70,7 +70,6 @@
                     const ultraPass = "1234";
 
                     if (isset($_POST["registrati"])) {
-                        #print_r($_POST);
                         if ($_POST["username"] == null || $_POST["password"] == null) {
                             echo ("Inserisci username e password!");
                             exit;
@@ -111,10 +110,6 @@
                                     $_SESSION["id"] = $user->getId();
                                     $_SESSION["username"] = $username;
                                     $_SESSION["password"] = $password;
-                                    //$_SESSION["priviledge"] = $priviledge;
-                                    //setcookie("id", $user->getId());
-                                    //setcookie("username", $user->getUsername());
-                                    //setcookie("password", $user->getPassword());
                                     setcookie("priviledge", $user->getPriviledge());
                                     header("location: main.php");
                                 }
