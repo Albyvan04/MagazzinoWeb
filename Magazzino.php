@@ -178,10 +178,6 @@ function ViewProdotti($prodotti, $numElementi)
             setcookie("maxPrice", $maxPrice);
         }
 
-        /*setcookie("minPrice", $minPrice);
-        setcookie("maxPrice", $maxPrice);
-        setcookie("searched", $searched);*/
-
         $orm = new ORM("magazzino");
         try {
             $orm->OpenConn();
